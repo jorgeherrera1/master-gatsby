@@ -1,25 +1,23 @@
 import React from 'react';
 import { Link, navigate } from 'gatsby';
 
-function goToSliceMasters() {
-  setTimeout(() => {
-    navigate('/slicemasters');
-  }, 2000);
-}
-
 export default function Nav() {
   return (
     <nav>
       <li>
-        <Link to="/">Home</Link>
+        <Link to="/">Hot Now</Link>
       </li>
       <li>
-        <Link to="/beers">Beers</Link>
+        <Link to="/pizzas">Pizza Menu</Link>
       </li>
       <li>
-        <button type="button" onClick={goToSliceMasters}>
-          click me to see slicemasters after two seconds
-        </button>
+        <Link to="/">LOGO</Link>
+      </li>
+      <li>
+        <Link to="/slicemasters">SliceMasters</Link>
+      </li>
+      <li>
+        <Link to="/order">Order Ahead!</Link>
       </li>
     </nav>
   );
