@@ -18,9 +18,10 @@ const PizzaStyles = styled.div`
   }
   grid-template-rows: var(--rows, subgrid);
   grid-row: span 3;
-  grid-gap: 1rem;
-  h2, p {
-   margin: 0;
+  gap: 1rem;
+  h2,
+  p {
+    margin: 0;
   }
 `;
 
