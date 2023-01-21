@@ -84,6 +84,48 @@ async function fetchBeersAndTurnIntoNodes({ actions, createNodeId, createContent
   }
 }
 
+async function turnSlicemastersIntoPages({graphql, actions}) {
+  // 1. query all slicemasters
+  const { data } = await graphql(`
+    query {
+      slicemasters: allSanityPerson {
+        totalCount
+        nodes {
+          name
+          id
+          slug {
+            current
+          }
+        }
+      }
+    }
+  `);
+  // 2. turn each slicemaster into their own page
+  // 3. figure out how many pages there are based on # slicemasters and how many per page
+  const pageSize = parseInt(process.env.GATSBY_PAGE_SIZE);
+  const pageCount = Math.ceil(data.slicemasters.totalCount / pageSize);
+
+  console.log(
+    `There are ${data.slicemasters.totalCount} slicemasters. We have ${pageCount} pages with ${pageSize} per page`
+  );
+  // 4. loop thru 1..N and create pages for them
+  Array.from({ length: pageCount }).forEach((_, i) => {
+    console.log(`Creating page ${i}`);
+    actions.createPage({
+      path: `/slicemasters/${i + 1}`,
+      component: path.resolve('./src/pages/slicemasters.js'),
+      // This data is passed to the template
+      context: {
+        // how many records will be skipped on each page. for example, on the first one
+        // since i=0 we are not skipping anything.
+        skip: i * pageSize,
+        currentPage: i + 1,
+        pageSize,
+      }
+    });
+  });
+}
+
 export async function sourceNodes(params) {
   await Promise.all([fetchBeersAndTurnIntoNodes(params)]);
 }
@@ -94,5 +136,6 @@ export async function createPages(params) {
   await Promise.all([
     turnPizzasIntoPages(params),
     turnToppingsIntoPages(params),
+    turnSlicemastersIntoPages(params),
   ]);
 }
